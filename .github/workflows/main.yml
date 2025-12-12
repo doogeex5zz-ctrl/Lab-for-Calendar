@@ -22,7 +22,7 @@ jobs:
       # Вивід інформації про автора (вимога лабораторної)
       - name: Print Author Info
         run: |
-          echo "Author: Pshonny Roman Viktorovich"
+          echo "Author: Pshonny Roman Viktorovuch"
           echo "Group: KV-31"
 
       # Встановлення бібліотек
