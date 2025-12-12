@@ -1,0 +1,52 @@
+name: Build and Release Calendar App
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Вивід інформації про автора (вимога лабораторної)
+      - name: Print Author Info
+        run: |
+          echo "Author: Pshonny Roman Viktorovich"
+          echo "Group: KV-31"
+
+      # Встановлення бібліотек
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Збирання .exe файлу
+      # Я вказав main.py, бо зазвичай він запускає програму.
+      # Якщо у тебе програма запускається через controller.py, зміни назву нижче.
+      - name: Build Application with PyInstaller
+        run: |
+          pyinstaller --onefile --name "CalendarApp" main.py
+
+      # Створення релізу та завантаження файлу
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
+          files: dist/CalendarApp
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
